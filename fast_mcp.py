@@ -7,4 +7,4 @@ def get_research_prompt(topic: str) -> str:
     return f'Research the topic: {topic}'
 
 if __name__ == '__main__':
-    mcp.run()
+    mcp.run(transport='http')
