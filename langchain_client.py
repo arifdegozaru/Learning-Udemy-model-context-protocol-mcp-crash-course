@@ -10,7 +10,30 @@ load_dotenv()
 llm = ChatOpenAI()
 
 async def main():
-    print('Hello langchain client')
+    client = MultiServerMCPClient(
+        {
+            "math": {
+                "command": "python",
+                "args": [
+                    "C:/Users/arif_h667/learning/udemy/model-context-protocol/mcp-crash-course/servers/math_server.py"
+                ],
+                "transport": "stdio",
+            },
+            "weather": {
+                "url": "http://localhost:8000/sse",
+                "transport": "sse",
+            },
+        }
+    )
+
+    tools = await client.get_tools()
+    agent = create_react_agent(llm, tools)
+
+    # result = await agent.ainvoke({"messages": "What 1 + 5"})
+    result = await agent.ainvoke({"messages": "What is the weather now"})
+
+
+    print(result["messages"][-1].content)
 
 if __name__ == '__main__':
     asyncio.run(main())
